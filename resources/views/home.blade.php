@@ -80,27 +80,16 @@
           <div class="container mt-4">
             <h3 id="oferta">Polecane</h3>
             <div class="col-md-2 mb-4">
-              <form method="GET" action="{{ url('/') }}" class="form-inline">
-                <label for="sortowanie" class="mr-2">Sortuj według ceny:</label>
-                <select name="sortowanie" id="sortowanie" class="form-control mr-2">
-                  <option value="asc" {{ Request::get('sortowanie') == 'asc' ? 'selected' : '' }}>Rosnąco</option>
-                  <option value="desc" {{ Request::get('sortowanie') == 'desc' ? 'selected' : '' }}>Malejąco</option>
-                  <input type="hidden" name="price" value="{{ Request::get('price') }}">
-                  <button type="submit" class="btn btn-primary">Sortuj</button>
-                </select>
-            </form>
+
             </div>
 
             <div class="row">
 
               @php
-              $sortowanie = Request::get('sortowanie');
-              $sortowanie = $sortowanie == 'asc' ? 'asc' : 'desc';
               $stones = DB::table('stones')
                 ->select('img', 'name', 'description', 'price')
                 ->inRandomOrder()
                 ->limit(3)
-                ->orderBy('price', $sortowanie) // Sortowanie po cenie
                 ->get();
               @endphp
               @foreach ($stones as $stone)
