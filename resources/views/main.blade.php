@@ -140,6 +140,10 @@
                 <button onclick="topFunction()" id="myBtn" class="btn btn-primary rounded-circle">&#8593;</button>
             </div>
 
+            <div class="container mt-4 text-center">
+                <button onclick="topFunction()" id="myBtn" class="btn btn-primary rounded-circle">&#8593;</button>
+            </div>
+
           <script src="js/bootstrap.min.js"></script>
       <script src="js/bootstrap.bundle.min.js"></script>
       <script>
@@ -149,9 +153,5 @@
             document.documentElement.scrollTop = 0;
         }
     </script>
-
-
-
-
     </body>
 </html>
