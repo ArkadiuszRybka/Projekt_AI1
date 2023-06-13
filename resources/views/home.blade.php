@@ -31,9 +31,11 @@
                     </li>
                 @endif
                 @guest
+
                 <a class="nav-link btn btn-success" href="{{ route('login') }}">Zaloguj się</a>
                 <a class="nav-link btn btn-success" href="{{ route('register') }}">Zarejestruj się</a>
         @else
+                <a class="nav-link btn btn-success" href="">Koszyk</a>
                 <a class="nav-link btn btn-success" href="{{ route('users.show', ['id' => Auth::id()]) }}">Ustawienia</a>
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                     @csrf
@@ -80,27 +82,16 @@
           <div class="container mt-4">
             <h3 id="oferta">Polecane</h3>
             <div class="col-md-2 mb-4">
-              <form method="GET" action="{{ url('/') }}" class="form-inline">
-                <label for="sortowanie" class="mr-2">Sortuj według ceny:</label>
-                <select name="sortowanie" id="sortowanie" class="form-control mr-2">
-                  <option value="asc" {{ Request::get('sortowanie') == 'asc' ? 'selected' : '' }}>Rosnąco</option>
-                  <option value="desc" {{ Request::get('sortowanie') == 'desc' ? 'selected' : '' }}>Malejąco</option>
-                  <input type="hidden" name="price" value="{{ Request::get('price') }}">
-                  <button type="submit" class="btn btn-primary">Sortuj</button>
-                </select>
-            </form>
+
             </div>
 
             <div class="row">
 
               @php
-              $sortowanie = Request::get('sortowanie');
-              $sortowanie = $sortowanie == 'asc' ? 'asc' : 'desc';
               $stones = DB::table('stones')
-                ->select('img', 'name', 'description', 'price')
+                ->select('id','img', 'name', 'description', 'price')
                 ->inRandomOrder()
                 ->limit(3)
-                ->orderBy('price', $sortowanie) // Sortowanie po cenie
                 ->get();
               @endphp
               @foreach ($stones as $stone)
@@ -110,14 +101,18 @@
               $description = $stone->description;
               $price = $stone->price;
               @endphp
-              <div class="col-md-4 mb-4">
-                <div class="card">
-                  <img src="{{ asset($img) }}" class="card-img-top" alt="Kamień 1">
-                  <div class="card-body">
-                    <h5 class="card-title">{{ $name }}</h5>
-                    <p class="card-text">{{ $description }}</p>
-                    <p class="card-text">{{ $price }} zł/1000kg</p>
-                    <a href="#" class="btn btn-primary">Kup teraz</a>
+             <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                  <img src="{{ asset($stone->img) }}" class="card-img-top" alt="Kamień 1">
+                  <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ $stone->name }}</h5>
+                    <p class="card-text">{{ $stone->description }}</p>
+                    <p class="card-text mt-auto">{{ $stone->price }} zł/1000kg</p>
+                    @guest
+                    <a href="{{ route('login') }}" class="btn btn-primary mt-2 add-to-cart"><b>Dodaj do koszyka</b></a>
+                    @else
+                    <a href="{{ route('addToCart', ['id' => $stone->id]) }}" class="btn btn-primary mt-2 add-to-cart"><b>Dodaj do koszyka</b></a>
+                    @endguest
                   </div>
                 </div>
               </div>

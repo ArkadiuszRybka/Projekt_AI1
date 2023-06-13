@@ -34,11 +34,11 @@
                 <a class="nav-link btn btn-success" href="{{ route('login') }}">Zaloguj się</a>
                 <a class="nav-link btn btn-success" href="{{ route('register') }}">Zarejestruj się</a>
         @else
+                <a class="nav-link btn btn-success" href="{{ route('cart') }}">Koszyk</a>
                 <a class="nav-link btn btn-success" href="{{ route('users.show', ['id' => Auth::id()]) }}">Ustawienia</a>
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                     @csrf
                 </form>
-
                 <a class="nav-link btn btn-success" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                     Wyloguj
                 </a>
@@ -80,7 +80,7 @@
           <div class="container mt-4">
             <h3 id="oferta">Oferta</h3>
             <div class="col-md-2 mb-4">
-              <form method="GET" action="{{ url('/') }}" class="form-inline">
+              <form method="GET" action="{{ url('main') }}" class="form-inline">
                 <label for="sortowanie" class="mr-2">Sortuj według ceny:</label>
                 <select name="sortowanie" id="sortowanie" class="form-control mr-2">
                   <option value="asc" {{ Request::get('sortowanie') == 'asc' ? 'selected' : '' }}>Rosnąco</option>
@@ -93,36 +93,65 @@
 
             <div class="row">
 
-              @php
-              $sortowanie = Request::get('sortowanie');
-              $sortowanie = $sortowanie == 'asc' ? 'asc' : 'desc';
-              $stones = DB::table('stones')
-                ->select('img', 'name', 'description', 'price')
-                ->orderBy('price', $sortowanie) // Sortowanie po cenie
-                ->get();
-              @endphp
-              @foreach ($stones as $stone)
-              @php
-              $img = $stone->img;
-              $name = $stone->name;
-              $description = $stone->description;
-              $price = $stone->price;
-              @endphp
-              <div class="col-md-4 mb-4">
-                <div class="card">
-                  <img src="{{ asset($img) }}" class="card-img-top" alt="Kamień 1">
-                  <div class="card-body">
-                    <h5 class="card-title">{{ $name }}</h5>
-                    <p class="card-text">{{ $description }}</p>
-                    <p class="card-text">{{ $price }} zł/1000kg</p>
-                    <a href="#" class="btn btn-primary">Dodaj do koszyka</a>
-                  </div>
+                @php
+                $sortowanie = Request::get('sortowanie');
+                $sortowanie = $sortowanie == 'asc' ? 'asc' : 'desc';
+                $stones = DB::table('stones')
+                  ->select('id','img', 'name', 'description', 'price')
+                  ->orderBy('price', $sortowanie) // Sortowanie po cenie
+                  ->get();
+                @endphp
+                @foreach ($stones as $stone)
+                @php
+
+                $img = $stone->img;
+                $name = $stone->name;
+                $description = $stone->description;
+                $price = $stone->price;
+                @endphp
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <img src="{{ asset($stone->img) }}" class="card-img-top" alt="Kamień 1">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">{{ $stone->name }}</h5>
+                            <p class="card-text">{{ $stone->description }}</p>
+                            <p class="card-text mt-auto">{{ $stone->price }} zł/1000kg</p>
+                            @guest
+                            <a href="{{ route('login') }}" class="btn btn-primary mt-2 add-to-cart" disabled><b>Dodaj do koszyka</b></a>
+                            @else
+                            @php
+                            $isInCart = false;
+                            foreach ($cart as $cartItem) {
+                                if ($cartItem->id == $stone->id) {
+                                    $isInCart = true;
+                                    break;
+                                }
+                            }
+                            @endphp
+                            <a href="{{ route('addToCart', ['id' => $stone->id]) }}" class="btn btn-primary mt-2 add-to-cart {{ $isInCart ? 'disabled' : '' }}" @if($isInCart) disabled @endif><b>Dodaj do koszyka</b></a>
+                            @endguest
+                        </div>
+                    </div>
                 </div>
+                @endforeach
               </div>
-              @endforeach
+
+            <div class="container mt-4 text-center">
+                <button onclick="topFunction()" id="myBtn" class="btn btn-primary rounded-circle">&#8593;</button>
             </div>
+
           <script src="js/bootstrap.min.js"></script>
       <script src="js/bootstrap.bundle.min.js"></script>
+      <script>
+        // Przewijanie do góry strony
+        function topFunction() {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        }
+    </script>
+
+
+
+
     </body>
 </html>
-
