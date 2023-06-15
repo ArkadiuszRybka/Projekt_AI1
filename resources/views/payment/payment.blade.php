@@ -17,8 +17,6 @@
                         <p>Brak danych do wyświetlenia.</p>
                     @endif
 
-                    <input type="hidden" name="stripeToken" value="" id="tokenStripe">
-
                     <div class="total-price">
                         <h3>Kwota do zapłaty: {{ $totalAmount }}zł</h3>
                         <input type="hidden" value="{{ $totalAmount }}" name="totalAmount">
@@ -32,7 +30,7 @@
         </div>
 
 
-    {{-- pk_test_51NIc4GBWDnVcNSkWL9DjadBXYnGD36Wd65up6EcUjiQsSGZz7G2jarDa00aomw1mflKTBrVAz7FHlWPh6iaRfn1a00YREJvE7L --}}
+
     <script src="https://js.stripe.com/v3/"></script>
     <script>
         var stripeKey = document.getElementById('card-element').getAttribute('data-stripe-key');

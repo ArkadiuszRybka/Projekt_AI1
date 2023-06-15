@@ -18,24 +18,28 @@ class PaymentController extends Controller
     return view('payment.payment', compact('stones', 'quantities', 'totalAmount'));
 }
 
-// sk_test_51NIc4GBWDnVcNSkWoFxJpI6E8Go0s3zbtcEMP79a23ctGLu4wWAbMTA02uIN0VHIv3L4vIwnm7kkFGbE5V8KA6hO00cAJ6y74i
+
 public function processPayment(Request $request)
 {
     // Ustawienie klucza tajnego Stripe
-    Stripe::setApiKey('{{ env("STRIPE_SECRET_KEY") }}');
-    dd($request->all());
+    $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET_KEY'));
+
 
     // Utworzenie płatności na podstawie tokenu płatności
 
     $totalAmount = $request->input('totalAmount');
-
+    $token = $request->input('stripeToken');
+    $source = $stripe->sources->create([
+        'type' => 'card',
+        'token' => $token,
+    ]);
     try {
-        Charge::create([
-            'amount' => $totalAmount*100,
+        $paymentIntent = $stripe->paymentIntents->create([
+            'amount' => $totalAmount * 100,
             'currency' => 'pln',
             'description' => 'Opłata za zamówienie',
-            'source' =>  $request->stripeToken,
-          ]);
+            'source' => $source->id,
+        ]);
 
         // Płatność zakończona sukcesem
         return redirect()->route('successPayment');
