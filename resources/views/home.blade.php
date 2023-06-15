@@ -111,15 +111,7 @@
                     @guest
                     <a href="{{ route('login') }}" class="btn btn-primary mt-2 add-to-cart"><b>Dodaj do koszyka</b></a>
                     @else
-                    @php
-                            $isInCart = false;
-                            foreach ($cart as $cartItem) {
-                                if ($cartItem->id == $stone->id) {
-                                    $isInCart = true;
-                                    break;
-                                }
-                            }
-                            @endphp
+
                     <a href="{{ route('addToCart', ['id' => $stone->id]) }}" class="btn btn-primary mt-2 add-to-cart"><b>Dodaj do koszyka</b></a>
                     @endguest
                   </div>

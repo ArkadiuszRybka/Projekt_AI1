@@ -99,4 +99,8 @@ class AuthController extends Controller
         $cart = session()->get('cart', []);
         return view('main',['cart'=>$cart]);
     }
+    public function showMeMain2(){
+        $cart = session()->get('cart', []);
+        return view('/',['cart'=>$cart]);
+    }
 }

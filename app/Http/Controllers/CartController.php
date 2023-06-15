@@ -45,7 +45,7 @@ class CartController extends Controller
     $cart[] = $stoneId;
     session()->put('cart', $cart);
 
-    return redirect()->back()->with('success', 'Film został dodany do koszyka.');
+    return redirect()->route('main')->with('success', 'Film został dodany do koszyka.');
 }
 
 

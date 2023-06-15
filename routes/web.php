@@ -23,7 +23,6 @@ use App\Http\Middleware\AdminMiddleware;
 
 
 Route::get('/main',[AuthController::class, 'showMeMain'])->name('main');
-
 Route::get('/', function () {
     return view('home');
 });
