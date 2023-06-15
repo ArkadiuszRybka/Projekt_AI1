@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\AdminPanel\EditStonesController;
 use App\Http\Controllers\AdminPanel\EditUsersController;
 use App\Http\Controllers\CartController;
@@ -40,7 +41,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 
 //uzytkownik
-Route::get('/users/{id}', 'App\Http\Controllers\UsersController@show')->name('users.show');
+Route::get('/users/{id}', 'App\Http\Controllers\UsersController@show')->middleware('auth')->name('users.show');
 Route::get('/users/{user}/edit', 'App\Http\Controllers\UsersController@edit')->name('user.edit');
 Route::put('/users/{user}', [UsersController::class, 'update'])->name('users.update');
 Route::put('/users/{user}/update-password', [UsersController::class, 'updatePassword'])->name('user.updatePassword');
@@ -60,10 +61,20 @@ Route::delete('/delete-stone/{stoneId}', [EditStonesController::class, 'deleteSt
 
 //koszyk
 Route::post('/cart/remove', [CartController::class, 'removeProduct'])->name('cart.remove');
-
 Route::get('/cart', [CartController::class, 'showCart'])->name('cart');
-
 Route::get('/cart/{id}', [CartController::class, 'addToCart'])->name('addToCart');
+
+//płatność
+Route::get('/payment', [PaymentController::class, 'showPayment'])->name('payment');
+Route::post('/process_payment', [PaymentController::class, 'processPayment'])->name('process_payment');
+
+    Route::get('/payment/success', [PaymentController::class, 'successPayment'])->name('successPayment');
+    Route::get('/payment/error', [PaymentController::class, 'errorPayment'])->name('errorPayment');
+
+
+
+
+
 
 
 

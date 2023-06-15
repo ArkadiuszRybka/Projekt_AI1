@@ -9,11 +9,18 @@ use Illuminate\Support\Facades\Hash;
 class UsersController extends Controller
 {
     public function show($id)
-    {
-        $user = User::findOrFail($id);
+{
+    $user = User::findOrFail($id);
 
+    // Sprawdź, czy zalogowany użytkownik ma dostęp do ustawień
+    if (auth()->user()->id === $user->id) {
         return view('users.show', ['user' => $user]);
+    } else {
+        // Wyświetl komunikat o braku dostępu
+        abort(403, 'Brak dostępu do tych ustawień.');
     }
+}
+
 
     public function edit($id)
 {

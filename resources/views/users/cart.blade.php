@@ -50,10 +50,12 @@
                     <div class="col-md-12 col-lg-4">
                         <div class="summary">
                             <h3>Podsumowanie</h3>
-                            <div class="summary-item"><span class="text"><b>Cena:</b> </span><span class="price"></span></div>
+                            <div class="summary-item"><span class="text"><b>Cena: </b> </span><span class="price"></span></div>
                             <div class="summary-item"><span class="text"><b>Zniżka:</b> </span><span class="discount"></span></div>
-                            <div class="summary-item"><span class="text"><b>Dostawa:</b> </span><span class="price">0zł</span></div>
+                            <div class="summary-item"><span class="text"><b>Dostawa:</b> </span><span class="price">0</span></div>
                             <div class="summary-item"><span class="text"><b>Kwota:</b> </span><span class="total-price"></span></div>
+                            <div class="summary-item"><a href="{{ route('payment') }}" class="btn btn-primary" id="payment-button">Przejdź do płatności</a></div>
+
                         </div>
                     </div>
                 </div>
@@ -100,9 +102,9 @@
             var totalAmountElement = document.querySelector('.summary-item .total-price');
 
             if (totalPriceElement && discountElement && totalAmountElement) {
-                totalPriceElement.textContent = totalPrice.toFixed(2) + 'zł';
+                totalPriceElement.textContent = totalPrice.toFixed(2);
                 discountElement.textContent = (discount * 100).toFixed(0) + '%';
-                totalAmountElement.textContent = (totalPrice * (1 - discount)).toFixed(2) + 'zł';
+                totalAmountElement.textContent = (totalPrice * (1 - discount)).toFixed(2);
             }
         }
 
@@ -157,5 +159,37 @@
 
         // Inicjalizacja podsumowania
         updateTotalPrice();
+
+
+
+        var paymentButton = document.getElementById('payment-button');
+
+paymentButton.addEventListener('click', function (event) {
+    event.preventDefault();
+
+    var stones = [];
+    var quantities = [];
+    var totalAmountElement = document.querySelector('.summary-item .total-price');
+
+    // Pobierz nazwy kamieni i ich ilości
+    var products = document.querySelectorAll('.product');
+    products.forEach(function (product) {
+        var stoneName = product.querySelector('.product-name h6').textContent;
+        var quantityInput = product.querySelector('.quantity-input');
+        var quantity = parseInt(quantityInput.value);
+
+        stones.push(stoneName);
+        quantities.push(quantity);
+    });
+
+    // Pobierz kwotę
+    var totalAmount = totalAmountElement.textContent;
+
+    // Przejdź do widoku płatności i przekaż dane jako parametry URL
+    window.location.href = '{{ route('payment') }}' + '?stones=' + encodeURIComponent(JSON.stringify(stones)) +
+        '&quantities=' + encodeURIComponent(JSON.stringify(quantities)) +
+        '&totalAmount=' + encodeURIComponent(totalAmount);
+});
+
     </script>
 @endsection
