@@ -15,6 +15,19 @@ class UsersSeeder extends Seeder
      */
     public function run(): void
     {
+
+        DB::table('users')->insert([
+            'id' => '1',
+            'first_name' => 'admin',
+            'last_name' => 'admin',
+            'email' => 'admin@gmail.com',
+            'address' => 'admin',
+            'city' => 'admin',
+            'password' => Hash::make('admin'),
+            'isAdmin' => 1,
+        ]);
+
+
         $path = storage_path('csv/users.csv');
         $data = File::get($path);
         $rows = explode("\n", $data);

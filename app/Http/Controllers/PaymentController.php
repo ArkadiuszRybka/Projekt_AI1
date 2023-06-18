@@ -6,6 +6,8 @@ use Stripe\Stripe;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Stripe\Charge;
+use App\Http\Models\Transaction;
+use Illuminate\Support\Facades\DB;
 
 class PaymentController extends Controller
 {
@@ -18,48 +20,103 @@ class PaymentController extends Controller
     return view('payment.payment', compact('stones', 'quantities', 'totalAmount'));
 }
 
-
 public function processPayment(Request $request)
 {
-    // Ustawienie klucza tajnego Stripe
-    $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET_KEY'));
-
-
-    // Utworzenie płatności na podstawie tokenu płatności
-
     $totalAmount = $request->input('totalAmount');
+    $cart = session()->get('cart', []);
+
+    try {
+        $paymentStatus = $this->checkPayment($request);
+
+
+
+        if ($paymentStatus === 'succeeded') {
+            $transactionId = DB::table('transactions')->insertGetId([
+            'user_id' => Auth::user()->id,
+            'price' => $totalAmount,
+        ]);
+
+        foreach ($cart as $stoneId) {
+            DB::table('transaction')->insert([
+                'stone_id' => $stoneId->id,
+                'transactions_id' => $transactionId,
+            ]);
+        }
+
+        session()->forget('cart');
+        session()->save();
+            return redirect()->route('successPayment');
+        } else {
+            throw new \Exception(session()->get('error'));
+        }
+    } catch (\Exception $e) {
+        // Obsługa błędów płatności
+        $errorMessage = $this->getPaymentErrorMessage($e->getMessage());
+        return redirect()->route('errorPayment')->with('error', $errorMessage);
+    }
+}
+
+
+
+
+private function checkPayment(Request $request)
+{
+    $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET_KEY'));
     $token = $request->input('stripeToken');
+
     $source = $stripe->sources->create([
         'type' => 'card',
         'token' => $token,
     ]);
+    $totalAmount = $request->input('totalAmount');
+
     try {
         $paymentIntent = $stripe->paymentIntents->create([
             'amount' => $totalAmount * 100,
             'currency' => 'pln',
-            'description' => 'Opłata za zamówienie',
+            'description' => 'Opłata zamówienie',
             'source' => $source->id,
         ]);
 
-        // Płatność zakończona sukcesem
-        return redirect()->route('successPayment');
+        $paymentIntentId = $paymentIntent->id;
+        $confirmedPaymentIntent = $stripe->paymentIntents->confirm($paymentIntentId);
+        $paymentStatus = $confirmedPaymentIntent->status;
+
+        return $paymentStatus;
     } catch (\Exception $e) {
-        // Obsługa błędu płatności
-        return redirect()->route('errorPayment')->with('error', $e->getMessage());
+        throw new \Exception($e->getMessage());
     }
 }
 
-public function successPayment()
+
+private function getPaymentErrorMessage($errorMessage)
+{
+    switch ($errorMessage) {
+        case 'Your card was declined.':
+            return __('Karta została odrzucona. Prosimy spróbować inną kartę płatniczą.');
+        case 'Your card has expired.':
+            return __('Karta płatnicza wygasła. Prosimy podać ważną kartę płatniczą.');
+        case 'Your card\'s security code is incorrect.':
+            return __('Nieprawidłowy kod CVC. Prosimy sprawdzić poprawność wprowadzonego kodu.');
+        case 'An error occurred while processing your payment.':
+            return __('Wystąpił błąd podczas przetwarzania płatności. Prosimy spróbować ponownie.');
+        case 'Your card number is incorrect.':
+            return __('Nieprawidłowy numer karty. Prosimy sprawdzić poprawność wprowadzonego numeru.');
+        default:
+            return __('Wystąpił błąd podczas przetwarzania płatności. Spróbuj ponownie później.');
+    }
+}
+
+
+    public function successPayment()
     {
-        session()->forget('cart');
-        session()->save();
+        $user = Auth::user();
         return view('payment.success');
     }
 
     public function errorPayment()
     {
-        // Strona obsługi błędu płatności
-        return view('payment.error');
+        $errorMessage = session()->get('error');
+        return view('payment.error', ['errorMessage' => $errorMessage]);
     }
-
 }

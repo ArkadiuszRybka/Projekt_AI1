@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('stone_id')->nullable()->constrained();
 	        $table->foreignId('transactions_id')->nullable()->constrained();
+            $table->integer('quantities');
         });
     }
 

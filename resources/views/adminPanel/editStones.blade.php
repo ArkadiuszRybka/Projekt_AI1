@@ -48,7 +48,7 @@
 
                         <div class="form-group">
                             <label for="price">Cena:</label>
-                            <input type="text" class="form-control" name="price" value="{{ $stone->price }}">
+                            <input type="number" class="form-control" name="price" min="1" value="{{ $stone->price }}">
                         </div>
                         <div class="form-group">
                             <input type="text" class="form-control" name="img" value="{{ $stone->img }}">
