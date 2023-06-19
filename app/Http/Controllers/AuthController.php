@@ -61,15 +61,11 @@ class AuthController extends Controller
 
             $user = $this->create($request->all());
 
-            // Możesz również dodać dodatkowe działania po pomyślnym utworzeniu użytkownika, np. wysłać powiadomienie, zalogować użytkownika itp.
-
             return redirect()->route('main')->with('success', 'Rejestracja zakończona pomyślnie.');
         } catch (ValidationException $e) {
             return back()->withErrors($e->errors())->withInput();
         }
     }
-
-
 
     protected function validator(array $data)
     {

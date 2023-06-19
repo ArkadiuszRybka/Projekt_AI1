@@ -31,7 +31,6 @@ class CartController extends Controller
             break;
         }
     }
-
     session()->put('cart', $cart);
 
     return response()->json(['success' => true]);

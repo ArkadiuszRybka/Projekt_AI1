@@ -73,7 +73,6 @@
             products.forEach(function (product) {
                 var quantityInput = product.querySelector('.quantity-input');
                 var priceElement = product.querySelector('.product-price');
-
                 var quantity = parseInt(quantityInput.value);
                 var price = parseFloat(priceElement.textContent);
 
@@ -82,7 +81,6 @@
                     totalPrice += price * quantity;
                 }
             });
-
             var discount = 0;
             if (totalQuantity > 20) {
                 discount = 0.17;
@@ -95,8 +93,6 @@
             } else if (totalQuantity > 3) {
                 discount = 0.05;
             }
-
-
             var totalPriceElement = document.querySelector('.summary-item .price');
             var discountElement = document.querySelector('.summary-item .discount');
             var totalAmountElement = document.querySelector('.summary-item .total-price');
@@ -107,6 +103,14 @@
                 totalAmountElement.textContent = (totalPrice * (1 - discount)).toFixed(2);
             }
         }
+
+            // Aktualizuj cenę przy zmianie ilości kamieni
+            var quantityInputs = document.querySelectorAll('.quantity-input');
+            quantityInputs.forEach(function (input) {
+                input.addEventListener('input', function () {
+                    updateTotalPrice();
+                });
+            });
 
         // Pobierz wszystkie formularze "Usuń"
         var removeForms = document.querySelectorAll('.remove-product-form');
@@ -124,13 +128,7 @@
             });
         });
 
-        // Aktualizuj cenę przy zmianie ilości kamieni
-        var quantityInputs = document.querySelectorAll('.quantity-input');
-        quantityInputs.forEach(function (input) {
-            input.addEventListener('input', function () {
-                updateTotalPrice();
-            });
-        });
+
 
         function removeProductFromCart(productId, productContainer) {
             // Wywołaj odpowiednie zapytanie AJAX do usunięcia produktu z koszyka

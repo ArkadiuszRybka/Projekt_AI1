@@ -9,9 +9,6 @@ use Illuminate\Support\Facades\DB;
 
 class StonesSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         $path = storage_path('csv/stones.csv');

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name', 25)->unique();
             $table->text('description');
             $table->decimal('price');
-            $table->string('img', 55);
+            $table->binary('img')->nullable();
         });
     }
 

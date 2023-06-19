@@ -93,7 +93,6 @@
             </div>
 
             <div class="row">
-
                 @php
                 $sortowanie = Request::get('sortowanie');
                 $sortowanie = $sortowanie == 'asc' ? 'asc' : 'desc';

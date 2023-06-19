@@ -30,8 +30,6 @@ public function processPayment(Request $request)
     try {
         $paymentStatus = $this->checkPayment($request);
 
-
-
         if ($paymentStatus === 'succeeded') {
             $transactionId = DB::table('transactions')->insertGetId([
             'user_id' => Auth::user()->id,
@@ -56,7 +54,7 @@ public function processPayment(Request $request)
     } catch (\Exception $e) {
         // Obsługa błędów płatności
         $errorMessage = $this->getPaymentErrorMessage($e->getMessage());
-        return redirect()->route('errorPayment')->with('error', $e->getMessage());
+        return redirect()->route('errorPayment')->with('error', $errorMessage);
     }
 }
 
