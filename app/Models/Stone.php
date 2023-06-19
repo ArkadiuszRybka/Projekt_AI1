@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Order;
 
 class Stone extends Model
 {
@@ -13,5 +14,11 @@ class Stone extends Model
     protected $fillable = [
         'name ', 'description', 'price', 'director', 'release', 'img'
     ];
+
+    public function orders()
+{
+    return $this->hasMany(Orders::class);
+}
+
 
 }

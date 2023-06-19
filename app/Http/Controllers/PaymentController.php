@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Stripe\Charge;
 use App\Http\Models\Transaction;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class PaymentController extends Controller
@@ -24,6 +25,7 @@ public function processPayment(Request $request)
 {
     $totalAmount = $request->input('totalAmount');
     $cart = session()->get('cart', []);
+    $quantities = $request->input('quantities');
 
     try {
         $paymentStatus = $this->checkPayment($request);
@@ -34,12 +36,14 @@ public function processPayment(Request $request)
             $transactionId = DB::table('transactions')->insertGetId([
             'user_id' => Auth::user()->id,
             'price' => $totalAmount,
+            'created_at' => Carbon::now(),
         ]);
 
-        foreach ($cart as $stoneId) {
-            DB::table('transaction')->insert([
+        foreach ($cart as $key => $stoneId) {
+            DB::table('orders')->insert([
                 'stone_id' => $stoneId->id,
                 'transactions_id' => $transactionId,
+                'quantities' => $quantities[$key],
             ]);
         }
 
@@ -52,7 +56,7 @@ public function processPayment(Request $request)
     } catch (\Exception $e) {
         // Obsługa błędów płatności
         $errorMessage = $this->getPaymentErrorMessage($e->getMessage());
-        return redirect()->route('errorPayment')->with('error', $errorMessage);
+        return redirect()->route('errorPayment')->with('error', $e->getMessage());
     }
 }
 

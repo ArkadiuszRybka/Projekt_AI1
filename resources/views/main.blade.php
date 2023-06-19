@@ -35,6 +35,7 @@
                 <a class="nav-link btn btn-success" href="{{ route('register') }}">Zarejestruj się</a>
         @else
                 <a class="nav-link btn btn-success" href="{{ route('cart') }}">Koszyk</a>
+
                 <a class="nav-link btn btn-success" href="{{ route('users.show', ['id' => Auth::id()]) }}">Ustawienia</a>
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                     @csrf

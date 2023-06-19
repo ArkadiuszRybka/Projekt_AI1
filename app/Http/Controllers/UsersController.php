@@ -6,11 +6,12 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 class UsersController extends Controller
 {
     public function show($id)
 {
-    $user = User::findOrFail($id);
+    $user = User::with('transactions.orders.stone')->findOrFail($id);
 
     // Sprawdź, czy zalogowany użytkownik ma dostęp do ustawień
     if (auth()->user()->id === $user->id) {

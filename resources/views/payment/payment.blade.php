@@ -2,32 +2,34 @@
 <body>
 
 
-        <div class="container col-md-4">
-            <h2>Podsumowanie zamówienia</h2>
-            <div class="cart-items">
-                <form action="{{ route('process_payment') }}" method="POST" id="paymentForm">
-                    @csrf
-                    @if (!empty($stones) && !empty($quantities))
-                        @for ($i = 0; $i < count($stones); $i++)
-                            <div class="item">
-                                <h4>{{ $stones[$i] }} <p>Ilość: {{ $quantities[$i] }}000kg</p></h4>
-                            </div>
-                        @endfor
-                    @else
-                        <p>Brak danych do wyświetlenia.</p>
-                    @endif
+    <div class="container col-md-4">
+        <h2>Podsumowanie zamówienia</h2>
+        <div class="cart-items">
+            <form action="{{ route('process_payment') }}" method="POST" id="paymentForm">
+                @csrf
+                @if (!empty($stones) && !empty($quantities))
+                    @foreach($stones as $key => $stone)
+                        <div class="item">
+                            <h4>{{ $stone }}</h4>
+                            <p>Ilość: {{ $quantities[$key] }}000kg</p>
+                            <input type="hidden" name="quantities[]" value="{{ $quantities[$key] }}">
+                        </div>
+                    @endforeach
+                @else
+                    <p>Brak danych do wyświetlenia.</p>
+                @endif
 
-                    <div class="total-price">
-                        <h3>Kwota do zapłaty: {{ $totalAmount }}zł</h3>
-                        <input type="hidden" value="{{ $totalAmount }}" name="totalAmount">
-                    </div>
-                    <div id="card-element" class="form-control" data-stripe-key="{{ env('STRIPE_PUBLIC_KEY') }}"></div>
-                    <div id="card-errors" class="invalid-feedback"></div>
-                    <input type="hidden" name="stripeToken" value="" id="tokenStripe">
-                    <button type="submit" class="btn btn-primary">Zapłać</button>
-                </form>
-            </div>
+                <div class="total-price">
+                    <h3>Kwota do zapłaty: {{ $totalAmount }}zł</h3>
+                    <input type="hidden" value="{{ $totalAmount }}" name="totalAmount">
+                </div>
+                <div id="card-element" class="form-control" data-stripe-key="{{ env('STRIPE_PUBLIC_KEY') }}"></div>
+                <div id="card-errors" class="invalid-feedback"></div>
+                <input type="hidden" name="stripeToken" value="" id="tokenStripe">
+                <button type="submit" class="btn btn-primary">Zapłać</button>
+            </form>
         </div>
+    </div>
 
 
 

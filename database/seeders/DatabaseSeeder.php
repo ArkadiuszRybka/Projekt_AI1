@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
             UsersSeeder::class,
             StonesSeeder::class,
             TransactionsSeeder::class,
-            TransactionSeeder::class,
+            OrdersSeeder::class,
         ]);
 
     }
