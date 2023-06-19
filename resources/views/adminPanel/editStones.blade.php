@@ -1,6 +1,19 @@
 @extends('layouts.app')
 
 @section('content')
+<style>
+    @media (max-width: 576px) {
+        #addStoneForm {
+            display: block;
+        }
+
+        .col-md-4 {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+    }
+</style>
+
 <div class="container">
     <div class="row">
         <div class="col-md-12 mb-4">
@@ -22,18 +35,18 @@
                     <input type="text" class="form-control" name="price" id="price">
                 </div>
                 <div class="form-group">
-                    <label for="img"><b>Obrazek(Podaj ścieżkę do zdjęcia)</b></label>
-                    <input type="text" class="form-control" name="img" id="img">
+                    <label for="image"><b>Obrazek</b></label>
+                    <input type="file" class="form-control" name="img" id="img">
                 </div>
                 <button type="submit" class="btn btn-primary">Zatwierdź</button>
             </form>
         </div>
         @foreach ($stones as $stone)
-        <div class="col-md-4 mb-4">
+        <div class="col-md-4 col-sm-6 mb-4">
             <div class="card">
                 <img src="{{ asset($stone->img) }}" class="card-img-top" alt="Kamień 1">
                 <div class="card-body">
-                    <form action="{{ route('stones.update', ['stone' => $stone->id]) }}" method="POST">
+                    <form action="{{ route('stones.update', ['stone' => $stone->id]) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
                         <div class="form-group">
@@ -51,7 +64,7 @@
                             <input type="number" class="form-control" name="price" min="1" value="{{ $stone->price }}">
                         </div>
                         <div class="form-group">
-                            <input type="text" class="form-control" name="img" value="{{ $stone->img }}">
+                            <input type="file" class="form-control" name="img" id="img">
                         </div>
                         <button type="submit" class="btn btn-primary">Zatwierdź</button>
                         <button type="button" class="btn btn-danger" onclick="confirmDelete({{ $stone->id }})">Usuń</button>

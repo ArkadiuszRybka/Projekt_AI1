@@ -1,6 +1,22 @@
 @extends('layouts.app')
 
 @section('content')
+<style>
+    @media (max-width: 996px) {
+        .card-body {
+            overflow-x: auto;
+        }
+
+        .card-body table {
+            width: 100%;
+        }
+
+        .card-body table th,
+        .card-body table td {
+            white-space: nowrap;
+        }
+    }
+</style>
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">

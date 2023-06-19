@@ -57,14 +57,14 @@
             </div>
             <div class="carousel-inner">
               <div class="carousel-item active">
-                <img src="img/carousel.jpg" class="d-block w-100" alt="...">
+                <img src="images/carousel.jpg" class="d-block w-100" alt="...">
                 <div class="carousel-caption d-none d-md-block">
                   <h1>Kamienie dekoracyjne ogrodowe</h1>
                   <h1>Oferujemy niskie ceny oraz szybki transport!</h1>
                 </div>
               </div>
               <div class="carousel-item">
-                <img src="img/carousel2.jpg" class="d-block w-100" alt="...">
+                <img src="images/carousel2.jpg" class="d-block w-100" alt="...">
               </div>
             </div>
             <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
@@ -101,7 +101,7 @@
               $description = $stone->description;
               $price = $stone->price;
               @endphp
-             <div class="col-md-4 mb-4">
+             <div class="col-md-4 col-sm-6 mb-4">
                 <div class="card h-100">
                   <img src="{{ asset($stone->img) }}" class="card-img-top" alt="Kamień 1">
                   <div class="card-body d-flex flex-column">

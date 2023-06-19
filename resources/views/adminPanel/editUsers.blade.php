@@ -1,6 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
+<style>
+    @media (max-width: 576px) {
+        table {
+            overflow-x: auto;
+        }
+    }
+</style>
+
 <div class="container">
     <table class="table">
         <thead>
