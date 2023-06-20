@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('stone_id')->nullable()->constrained();
-	        $table->foreignId('transactions_id')->nullable()->constrained();
+	        $table->foreignId('transactions_id')->nullable()->constrained()->onDelete('cascade');
             $table->integer('quantities');
         });
     }

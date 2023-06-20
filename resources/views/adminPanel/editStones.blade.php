@@ -15,6 +15,19 @@
 </style>
 
 <div class="container">
+    <div class="col-6 text-right">
+        @if ($errors->any())
+            <div class="alert alert-danger mt-3">
+                @foreach ($errors->all() as $error)
+                    {{ $error }}
+                @endforeach
+            </div>
+        @elseif (session('success'))
+            <div class="alert alert-success mt-3">
+                {{ session('success') }}
+            </div>
+        @endif
+    </div>
     <div class="row">
         <div class="col-md-12 mb-4">
             <button class="btn btn-primary" id="addStoneButton">Dodaj</button>
@@ -24,19 +37,19 @@
                 @csrf
                 <div class="form-group">
                     <label for="name"><b>Nazwa</b></label>
-                    <input type="text" class="form-control" name="name" id="name">
+                    <input type="text" required class="form-control" name="name" id="name">
                 </div>
                 <div class="form-group">
                     <label for="description"><b>Opis</b></label>
-                    <textarea class="form-control" name="description" id="description" rows="3"></textarea>
+                    <textarea class="form-control" required name="description" id="description" rows="3"></textarea>
                 </div>
                 <div class="form-group">
                     <label for="price"><b>Cena</b></label>
-                    <input type="text" class="form-control" name="price" id="price">
+                    <input type="number" required class="form-control" name="price" min="1" max="10000" id="price">
                 </div>
                 <div class="form-group">
                     <label for="image"><b>Obrazek</b></label>
-                    <input type="file" class="form-control" name="img" id="img">
+                    <input type="file" class="form-control" required name="img" id="img">
                 </div>
                 <button type="submit" class="btn btn-primary">Zatwierdź</button>
             </form>
@@ -61,7 +74,7 @@
 
                         <div class="form-group">
                             <label for="price">Cena:</label>
-                            <input type="number" class="form-control" name="price" min="1" value="{{ $stone->price }}">
+                            <input type="number" class="form-control" name="price" min="1" max="10000" value="{{ $stone->price }}">
                         </div>
                         <div class="form-group">
                             <input type="file" class="form-control" name="img" id="img">

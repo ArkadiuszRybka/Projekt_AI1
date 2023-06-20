@@ -22,7 +22,7 @@ class EditStonesController extends Controller
         'name' => 'required',
         'description' => 'required',
         'price' => ['required','numeric'],
-        'img' => 'nullable|image|max:601',
+        'img' => 'nullable|image|max:400',
 
     ]);
 
